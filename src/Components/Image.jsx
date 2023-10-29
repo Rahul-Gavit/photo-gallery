@@ -2,6 +2,7 @@ import { useState } from "react";
 import { cross, like, popCross } from "../assets/icons";
 const Image = ({ data }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [imageUrl, setImageUrl] = useState("");
 
   const openPopup = () => {
     setIsPopupOpen(true);
@@ -11,6 +12,18 @@ const Image = ({ data }) => {
     console.log("Close button clicked");
     setIsPopupOpen(false);
   };
+
+  function handleDownloadClick() {
+    const downloadImgUrl = data.links.html;
+    setImageUrl(downloadImgUrl);
+    // Create a hidden anchor tag and trigger the download
+    const link = document.createElement("a");
+    link.href = downloadImgUrl;
+    link.download = "unsplash-image.jpg";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 
   return (
     <div>
@@ -50,16 +63,22 @@ const Image = ({ data }) => {
         {isPopupOpen && (
           <div>
             <h1 className="font-semibold font-montserrat mb-2">Related Tags</h1>
-            <div className="flex gap-4">
+            <div className="flex gap-2">
               {data.tags.map((tag) => (
                 <div
-                  className="bg-slate-200 px-3 py-2 rounded-md"
+                  className="bg-slate-200 px-3 py-1 rounded-sm"
                   key={tag.title}
                 >
                   {tag.title}
                 </div>
               ))}
             </div>
+            <button
+              className="bg-slate-500 px-2 py-1 mt-3 rounded-sm text-white"
+              onClick={handleDownloadClick}
+            >
+              Download
+            </button>
           </div>
         )}
       </div>
